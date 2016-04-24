@@ -1,0 +1,30 @@
+{
+  "name": "permutations",
+  "version": "1.0.0",
+  "description": "Some weird array stuff",
+  "main": "permutations.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node permutations.js",
+    "test": "npm run concat && mocha test",
+    "coverage": "istanbul cover _mocha test/* -- -R spec",
+    "report": "open coverage/lcov-report/index.html",
+    "concat": "cd tasks && node concat.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bf86/permutations.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bf86/permutations/issues"
+  },
+  "homepage": "https://github.com/bf86/permutations#readme",
+  "dependencies": {
+    "istanbul": "^0.4.3",
+    "mocha": "^2.4.5"
+  }
+}
