@@ -1,5 +1,3 @@
-var config = require('../config/config.js');
-
 var fs = require('fs'),
     files = fs.readdirSync('../lib'),
     allContents = '';
@@ -17,7 +15,6 @@ function addExports(files) {
   var functionNames = files.map(function(file) {
     return file.split('.')[0];
   });
-  // exportString = ['module.exports = {']
   exportString = []
 
   functionNames.forEach(function(functionName) {
