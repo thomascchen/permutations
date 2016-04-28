@@ -1,4 +1,4 @@
-exports.arrayGenerator = function (length) {
+function arrayGenerator(length) {
   var array = [];
   for (var i = 1; i <= length; i++) {
     array.push(i);
@@ -8,7 +8,8 @@ exports.arrayGenerator = function (length) {
 
 // Make n copies of array
 
-exports.copyArray = function(array, n) {
+function copyArray(array, n) {
+  n = n || 1;
   var copies = [];
 
   for (var i = 0; i < n; i++) {
@@ -26,38 +27,38 @@ exports.copyArray = function(array, n) {
   return copies;
 };
 
-exports.cycleAll = function(array) {
+function cycleAll(array) {
   var n = array.length;
   var permutations = [];
 
   for (var i = 0; i < n; i++) {
-    var nextCycle = exports.cycleElement(array, i)
+    var nextCycle = cycleElement(array, i)
     nextCycle.shift();
-    exports.flatPush(permutations, nextCycle);
+    flatPush(permutations, nextCycle);
   }
 
   permutations.push(array);
-  return exports.uniq(permutations);
+  return uniq(permutations);
 };
 
 // Shift array element at index x to every possible position
-exports.cycleElement = function(array, x) {
-  var permutations1 = exports.cycleToEnd(array, x);
-  var permutations2 = exports.cycleToFront(array, x);
+function cycleElement(array, x) {
+  var permutations1 = cycleToEnd(array, x);
+  var permutations2 = cycleToFront(array, x);
   permutations2.shift();
   var allPermutations = permutations1.concat(permutations2);
-  return exports.uniq(allPermutations);
+  return uniq(allPermutations);
 }
 
 // Shift array element at index x to every possible position from current to end
-exports.cycleToEnd = function(array, indexToCycle) {
+function cycleToEnd(array, indexToCycle) {
   var i = indexToCycle
   var length = array.length;
   var permutations = [array];
 
   while (i < length - 1) {
-    var currentPermutation = exports.lastElement(permutations);
-    var nextPermutation = exports.swapElements(currentPermutation, i, i + 1);
+    var currentPermutation = lastElement(permutations);
+    var nextPermutation = swapElements(currentPermutation, i, i + 1);
     permutations.push(nextPermutation);
     i += 1;
   }
@@ -65,20 +66,26 @@ exports.cycleToEnd = function(array, indexToCycle) {
 };
 
 // Shift array element at index x to every possible position toward front
-exports.cycleToFront = function(array, indexToCycle) {
+function cycleToFront(array, indexToCycle) {
   var i = indexToCycle
   var permutations = [array];
 
   while (i > 0) {
-    var currentPermutation = exports.lastElement(permutations);
-    var nextPermutation = exports.swapElements(currentPermutation, i, i - 1);
+    var currentPermutation = lastElement(permutations);
+    var nextPermutation = swapElements(currentPermutation, i, i - 1);
     permutations.push(nextPermutation);
     i -= 1;
   }
   return permutations;
 };
 
-exports.deleteLeftmost = function(array, toDelete) {
+function deleteAll(array, toDelete) {
+  return array.filter(function(element) {
+    return element !== toDelete
+  });
+};
+
+function deleteLeftmost(array, toDelete) {
   var newArray = [];
   var deleted = false;
 
@@ -93,20 +100,20 @@ exports.deleteLeftmost = function(array, toDelete) {
   return (newArray);
 };
 
-exports.deleteRightmost = function(array, toDelete) {
-  var array = exports.reverse(array);
-  array = exports.deleteLeftmost(array, toDelete);
-  return exports.reverse(array);
+function deleteRightmost(array, toDelete) {
+  var array = reverse(array);
+  array = deleteLeftmost(array, toDelete);
+  return reverse(array);
 };
 
-exports.doubleCycleAll = function(array) {
-  var permutations1 = exports.cycleAll(array);
-  var permutations2 = exports.cycleAll(exports.reverse(array));
+function doubleCycleAll(array) {
+  var permutations1 = cycleAll(array);
+  var permutations2 = cycleAll(reverse(array));
 
-  return exports.uniq(permutations1.concat(permutations2));
+  return uniq(permutations1.concat(permutations2));
 };
 
-exports.equalArrays = function(array1, array2) {
+function equalArrays(array1, array2) {
   if (array1.length !== array2.length) {
     return false;
   }
@@ -136,7 +143,7 @@ function equalArrays2(metaArray1, metaArray2) {
   return equal;
 }
 
-exports.factorial = function(positiveNumber) {
+function factorial(positiveNumber) {
   var n = positiveNumber;
   for (var i = n - 1; i > 0; i--) {
     n *= i;
@@ -144,13 +151,13 @@ exports.factorial = function(positiveNumber) {
   return n
 };
 
-exports.flatPush = function(targetArray, sourceArray) {
+function flatPush(targetArray, sourceArray) {
   sourceArray.forEach(function(element) {
     targetArray.push(element);
   });
 };
 
-exports.getAllPermutations = function(array, debugMode) {
+function getAllPermutations(array, debugMode) {
   if (array.length <= 1) {
     return array;
   }
@@ -161,32 +168,33 @@ exports.getAllPermutations = function(array, debugMode) {
 
   var possibilities = factorial(array.length);
   var permutations = getPermutations(array);
-  console.log(permutations);
 
-  while (permutations.length < possibilities) {
+  while (uniq(permutations).length < possibilities) {
     if (debugMode) {
       console.log(permutations.length);
     }
     array = shuffle(array);
-    lib.flatPush(permutations, getPermutations(array));
+    flatPush(permutations, getPermutations(array));
   }
 
   if (debugMode) {
     console.log(permutations.length);
+    console.log(possibilities);
     console.log('Success!');
   }
-  return permutations;
+
+  return uniq(permutations);
 }
 
-exports.getPermutations = function(array) {
+function getPermutations(array) {
   var length = array.length;
   var permutations = [];
   var newSet;
-  var newArray = lib.copyArray(array);
+  var newArray = copyArray(array);
 
   for (var i = 0; i < length; i++) {
-    newSet = lib.doubleCycleAll(newArray);
-    lib.flatPush(permutations, newSet);
+    newSet = doubleCycleAll(newArray);
+    flatPush(permutations, newSet);
     newArray = rotate(newArray, 1);
   }
 
@@ -197,7 +205,7 @@ exports.getPermutations = function(array) {
   return uniq(permutations);
 };
 
-exports.includes = function(array, element) {
+function includes(array, element) {
   if (typeof array[0] === 'object') {
     return includes2(array, element);
   }
@@ -214,18 +222,18 @@ function includes1(array, element) {
 function includes2(metaArray, array) {
   var includes = false;
   metaArray.forEach(function(element) {
-    if (exports.equalArrays(array, element)) {
+    if (equalArrays(array, element)) {
       includes = true;
     }
   });
   return includes;
 }
 
-exports.lastElement = function(array) {
+function lastElement(array) {
   return array[array.length - 1];
 };
 
-exports.reverse = function(array) {
+function reverse(array) {
   var newArray = [];
   array.forEach(function(element) {
     newArray.unshift(element);
@@ -233,7 +241,7 @@ exports.reverse = function(array) {
   return newArray;
 }
 
-exports.rotate = function(array, n) {
+function rotate(array, n) {
   if (!n) {
     var n = 1;
   }
@@ -247,7 +255,7 @@ exports.rotate = function(array, n) {
   return array;
 }
 
-exports.shuffle = function(array) {
+function shuffle(array) {
   for (var i = 0; i < array.length; i++) {
     var x = getRandom(0, array.length);
     var y = getRandom(0, array.length);
@@ -260,20 +268,20 @@ function getRandom(min, max) {
   return Math.floor((Math.random() * max) + min);
 }
 
-exports.stringifyElements = function(array) {
+function stringifyElements(array) {
   return array.map(function(element) {
     return element.toString();
   });
 };
 
-exports.swapElements = function(array, index1, index2) {
-  var newArray = exports.copyArray(array, 1);
+function swapElements(array, index1, index2) {
+  var newArray = copyArray(array, 1);
   newArray[index1] = array[index2];
   newArray[index2] = array[index1];
   return newArray;
 }
 
-exports.uniq = function(array, element) {
+function uniq(array, element) {
   if (typeof array[0] === 'object') {
     return uniq2(array);
   }
@@ -283,7 +291,7 @@ exports.uniq = function(array, element) {
 function uniq1(array) {
   var uniqArray = [];
   array.forEach(function(element, index) {
-    if (exports.includes(uniqArray, element)) {
+    if (includes(uniqArray, element)) {
       return;
     }
     uniqArray.push(array[index]);
@@ -294,7 +302,7 @@ function uniq1(array) {
 function uniq2(array) {
   var uniqArray = [];
   array.forEach(function(element, index) {
-    if (exports.includes(uniqArray, element)) {
+    if (includes(uniqArray, element)) {
       return;
     }
     uniqArray.push(array[index]);
@@ -302,3 +310,28 @@ function uniq2(array) {
   return uniqArray;
 };
 
+module.exports = {
+  arrayGenerator: arrayGenerator,
+  copyArray: copyArray,
+  cycleAll: cycleAll,
+  cycleElement: cycleElement,
+  cycleToEnd: cycleToEnd,
+  cycleToFront: cycleToFront,
+  deleteAll: deleteAll,
+  deleteLeftmost: deleteLeftmost,
+  deleteRightmost: deleteRightmost,
+  doubleCycleAll: doubleCycleAll,
+  equalArrays: equalArrays,
+  factorial: factorial,
+  flatPush: flatPush,
+  getAllPermutations: getAllPermutations,
+  getPermutations: getPermutations,
+  includes: includes,
+  lastElement: lastElement,
+  reverse: reverse,
+  rotate: rotate,
+  shuffle: shuffle,
+  stringifyElements: stringifyElements,
+  swapElements: swapElements,
+  uniq: uniq
+};
