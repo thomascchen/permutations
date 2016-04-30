@@ -1,6 +1,6 @@
 {
   "name": "chill-javascript",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Some chill array functions",
   "main": "main.js",
   "directories": {
