@@ -1,13 +1,14 @@
 {
-  "name": "permutations",
+  "name": "chill-javascript",
   "version": "1.0.0",
-  "description": "Some weird array stuff",
-  "main": "permutations.js",
+  "description": "Some chill array functions",
+  "main": "main.js",
   "directories": {
+    "lib": "lib",
+    "tasks": "tasks",
     "test": "test"
   },
   "scripts": {
-    "start": "node permutations.js",
     "test": "npm run concat && mocha test",
     "coverage": "istanbul cover _mocha test/* -- -R spec",
     "report": "open coverage/lcov-report/index.html",
@@ -17,13 +18,13 @@
     "type": "git",
     "url": "https://github.com/bf86/permutations.git"
   },
-  "author": "",
+  "author": "Brian Fink",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bf86/permutations/issues"
   },
   "homepage": "https://github.com/bf86/permutations#readme",
-  "dependencies": {
+  "devDependencies": {
     "istanbul": "^0.4.3",
     "mocha": "^2.4.5"
   }
